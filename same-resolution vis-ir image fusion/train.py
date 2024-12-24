@@ -50,7 +50,7 @@ def train(source_imgs, save_path, EPOCHES_set, BATCH_SIZE, logging_period = 1):
 
 	# create the graph
 	with tf.Graph().as_default(), tf.Session() as sess:
-		# 创建一个名为‘SOURCE_VIS’的
+		# 创建一个名为‘SOURCE_VIS’的占位符，用于输入可见光图像数据。每张图尺寸为patech_size*patch_size，单通道(灰度图)
 		SOURCE_VIS = tf.placeholder(tf.float32, shape = (BATCH_SIZE, patch_size, patch_size, 1), name = 'SOURCE_VIS')
 		SOURCE_IR = tf.placeholder(tf.float32, shape = (BATCH_SIZE, patch_size, patch_size, 1), name = 'SOURCE_IR')
 		print('source_vis shape:', SOURCE_VIS.shape)
