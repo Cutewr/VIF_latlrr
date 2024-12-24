@@ -3,7 +3,7 @@ import numpy as np
 from latent_lrr import latent_lrr  # Assuming latent_lrr is implemented as a Python function
 import time
 
-for index in range(1, 17):
+for index in range(1, 2):
     path1 = f'./source_images/IV_images/IR{index}.png'
     path2 = f'./source_images/IV_images/VIS{index}.png'
     fuse_path = f'./fused_images/fused{index}_latlrr.png'
@@ -40,6 +40,17 @@ for index in range(1, 17):
     I_lrr2 = np.clip(np.dot(image2, Z2), 0, 1)
     I_saliency2 = np.clip(np.dot(L2, image2), 0, 1)
     I_e2 = E2
+
+    # Save I_saliency1 and I_saliency2
+    I_saliency1_uint8 = (I_saliency1 * 255).astype(np.uint8)
+    I_saliency2_uint8 = (I_saliency2 * 255).astype(np.uint8)
+
+    saliency_path1 = f'./saliency_images/saliency1_{index}.png'
+    saliency_path2 = f'./saliency_images/saliency2_{index}.png'
+
+    # Save the saliency images
+    cv2.imwrite(saliency_path1, I_saliency1_uint8)
+    cv2.imwrite(saliency_path2, I_saliency2_uint8)
 
     # Fusion
     F_lrr = (I_lrr1 + I_lrr2) / 2
