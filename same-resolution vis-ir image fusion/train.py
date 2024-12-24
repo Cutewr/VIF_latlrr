@@ -5,9 +5,11 @@ from __future__ import print_function
 import scipy.io as scio
 import numpy as np
 import tensorflow as tf
+
 import matplotlib.pyplot as plt
 import time
-from scipy.misc import imsave
+# from scipy.misc import imsave
+
 import scipy.ndimage
 
 from Generator import Generator
@@ -48,14 +50,20 @@ def train(source_imgs, save_path, EPOCHES_set, BATCH_SIZE, logging_period = 1):
 		# 裁剪数据集，移除那些无法组成完整批次的样本
 		source_imgs = source_imgs[:-mod]
 
+	# 限制 TensorFlow 只使用 GPU 0
+	config = tf.ConfigProto()
+	config.gpu_options.visible_device_list = "0"  # 只使用 GPU 0
+
 	# create the graph
-	with tf.Graph().as_default(), tf.Session() as sess:
+	with tf.Graph().as_default(), tf.Session(config=config) as sess:
+
 		# 创建一个名为‘SOURCE_VIS’的占位符，用于输入可见光图像数据。每张图尺寸为patech_size*patch_size，单通道(灰度图)
 		SOURCE_VIS = tf.placeholder(tf.float32, shape = (BATCH_SIZE, patch_size, patch_size, 1), name = 'SOURCE_VIS')
 		SOURCE_IR = tf.placeholder(tf.float32, shape = (BATCH_SIZE, patch_size, patch_size, 1), name = 'SOURCE_IR')
 		print('source_vis shape:', SOURCE_VIS.shape)
 
 		G = Generator('Generator')
+		# 经过生成器(编码+解码)生成的图像
 		generated_img = G.transform(vis = SOURCE_VIS, ir = SOURCE_IR)
 		print('generate:', generated_img.shape)
 
@@ -195,13 +203,19 @@ def train(source_imgs, save_path, EPOCHES_set, BATCH_SIZE, logging_period = 1):
 					saver.save(sess, save_path + str(step) + '/' + str(step) + '.ckpt')
 
 				is_last_step = (epoch == EPOCHS - 1) and (batch == n_batches - 1)
-				if is_last_step or step % logging_period == 0:
+				if step==954:
 					elapsed_time = datetime.now() - start_time
 					lr = sess.run(learning_rate)
 					print('epoch:%d/%d, step:%d, lr:%s, elapsed_time:%s' % (
 						epoch + 1, EPOCHS, step, lr, elapsed_time))
-	writer.close()
-	saver.save(sess, save_path + str(epoch) + '/' + str(epoch) + '.ckpt')
+				elif is_last_step or step % logging_period == 0:
+					elapsed_time = datetime.now() - start_time
+					lr = sess.run(learning_rate)
+					print('epoch:%d/%d, step:%d, lr:%s, elapsed_time:%s' % (
+						epoch + 1, EPOCHS, step, lr, elapsed_time))
+
+			writer.close()
+			saver.save(sess, save_path + str(epoch) + '/' + str(epoch) + '.ckpt')
 
 
 def grad(img):

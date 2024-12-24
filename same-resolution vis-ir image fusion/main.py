@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from train import train
 from generate import generate
 import scipy.ndimage
+import tensorflow as tf
 
 BATCH_SIZE = 24
 EPOCHES = 1
@@ -21,7 +22,7 @@ IS_TRAINING = True
 def main():
 	if IS_TRAINING:
 		# 从HDF5文件中读取数据集，只读模式读取
-		f = h5py.File('/home/jxy/xh/project/DDcGAN-same_resolution/Training_Dataset.h5', 'r')
+		f = h5py.File('E:/AAAVIF/DataSet/Training_Dataset.h5', 'r')
 		sources = f['data'][:]
 		# 调整维度顺序为：(N,C,W,H)
 		sources = np.transpose(sources, (0, 3, 2, 1))
@@ -35,7 +36,7 @@ def main():
 		# 	test_num = len(files)
 
 		Time=[]
-		files = listdir(path+'ir/')
+		files = os.listdir(path + 'ir/')
 		for file in files:
 			name = file.split('/')[-1]
 			index = index + 1

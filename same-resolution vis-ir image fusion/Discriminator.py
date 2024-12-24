@@ -1,14 +1,7 @@
-import tensorflow as tf
-import numpy as npimport
-
-import tensorflow as tf
-
 from tensorflow.python import pywrap_tensorflow
 import numpy as np
 
 import tensorflow as tf
-from tensorflow.python import pywrap_tensorflow
-import numpy as np
 
 WEIGHT_INIT_STDDEV = 0.1
 
