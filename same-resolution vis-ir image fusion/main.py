@@ -16,7 +16,7 @@ BATCH_SIZE = 24
 EPOCHES = 1
 LOGGING = 40
 MODEL_SAVE_PATH = './model/'
-IS_TRAINING = True
+IS_TRAINING = False
 
 
 def main():
@@ -37,6 +37,7 @@ def main():
 
 		Time=[]
 		files = os.listdir(path + 'ir/')
+		index = 0
 		for file in files:
 			name = file.split('/')[-1]
 			index = index + 1
